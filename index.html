@@ -25,6 +25,9 @@
   </div>
 
   <header>
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
     <div class="headerstyle"></div>
     <div class="brand">
       <!-- Logo oficial — filtro branco sobre fundo azul -->
@@ -42,12 +45,11 @@
       <div class="brand-sys-name">Gestão de Contratos &amp; Obras</div>
       <div class="brand-sys-sub">Remessa Mensal TCE-RO &middot; PNCP</div>
     </div>
-    </div>
     <button class="btn-export" onclick="openExport()">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" />
       </svg>
-      Exportar Remessa
+      <span>Exportar</span>
     </button>
   </header>
 
@@ -55,7 +57,7 @@
     <nav class="sidebar">
       <!-- Logo na sidebar (versão colorida/azul — fundo claro) -->
       <div class="sl" style="margin-top:.85rem">Painel</div>
-      <div class="si active" onclick="showPage('dash')">📊 Visão Geral</div>
+      <div class="si active" onclick="showPage('home')">🏠 Início</div>
       <div class="sl">Novos</div>
       <div class="si" onclick="showPage('nc')">📄 Contratos <span class="bdg" id="b-nc">0</span></div>
       <div class="si" onclick="showPage('no')">🏗 Obras <span class="bdg" id="b-no">0</span></div>
@@ -78,6 +80,7 @@
       </div>
     </nav>
     <main id="main"></main>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
   </div>
   <footer class="main-footer">
     Desenvolvido pela <a href="https://semec.portovelho.ro.gov.br/" target="_blank">SEMEC</a> - Versão de testes
@@ -115,7 +118,6 @@
             <input type="number" id="exp-ano" value="2025" min="2020" max="2099">
           </div>
         </div>
-
         <div
           style="background:#f8faff;border:1px solid var(--border);border-radius:9px;padding:1rem;margin-bottom:1rem">
           <div
@@ -222,17 +224,69 @@
     function showPage(p) {
       curPage = p;
       document.querySelectorAll('.si').forEach(s => s.classList.remove('active'));
-      const map = { dash: 0, nc: 1, no: 2, ac: 3, ao: 4, ef: 5, sc: 6 };
-      document.querySelectorAll('.si')[map[p]]?.classList.add('active');
+      const map = { home: 0, nc: 1, no: 2, ac: 3, ao: 4, ef: 5, sc: 6, dash: -1 };
+      if (map[p] !== -1) document.querySelectorAll('.si')[map[p]]?.classList.add('active');
       renderPage(p);
+      
+      // Fecha o menu no mobile após clicar
+      if (window.innerWidth <= 768) {
+        document.querySelector('.sidebar').classList.remove('open');
+        document.querySelector('.sidebar-overlay').classList.remove('show');
+      }
+    }
+
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('show');
     }
 
     function renderPage(p) {
       const m = document.getElementById('main');
       m.innerHTML = '';
-      const pages = { dash: pgDash, nc: pgNC, no: pgNO, ac: pgAC, ao: pgAO, ef: pgEF, sc: pgSC };
-      (pages[p] || pgDash)();
+      const pages = { home: pgHome, dash: pgDash, nc: pgNC, no: pgNO, ac: pgAC, ao: pgAO, ef: pgEF, sc: pgSC };
+      (pages[p] || pgHome)();
       updBadges();
+    }
+
+    // ===================== HOME =====================
+    function pgHome() {
+      const m = document.getElementById('main');
+      m.innerHTML = `
+        <div class="pt">Início</div>
+        <div class="ps">Selecione uma opção para gerenciar contratos e obras</div>
+        
+        <div class="home-grid">
+          <div class="home-card" onclick="showPage('nc')">
+            <div class="home-icon">📄</div>
+            <div class="home-label">Novos Contratos</div>
+            <div class="home-desc">Cadastro de novos contratos, convênios e parcerias</div>
+          </div>
+          
+          <div class="home-card" onclick="showPage('no')">
+            <div class="home-icon">🏗</div>
+            <div class="home-label">Novas Obras</div>
+            <div class="home-desc">Registro de novos empreendimentos e licitações de obras</div>
+          </div>
+          
+          <div class="home-card" onclick="showPage('ac')">
+            <div class="home-icon">📋</div>
+            <div class="home-label">Acomp. Contratos</div>
+            <div class="home-desc">Gestão de remessas e aditivos de contratos ativos</div>
+          </div>
+          
+          <div class="home-card" onclick="showPage('ao')">
+            <div class="home-icon">⚙</div>
+            <div class="home-label">Acomp. Obras</div>
+            <div class="home-desc">Medições, relatórios fotográficos e evolução de obras</div>
+          </div>
+
+          <div class="home-card" onclick="showPage('dash')">
+            <div class="home-icon">📊</div>
+            <div class="home-label">Visão Geral</div>
+            <div class="home-desc">Painel de indicadores e estatísticas do sistema</div>
+          </div>
+        </div>
+      `;
     }
 
     // ===================== DASHBOARD =====================
@@ -626,14 +680,26 @@
     function pgNC() {
       const m = document.getElementById('main');
       m.innerHTML = `
-    <div class="pt">Fluxo A — Novos Contratos</div>
-    <div class="ps">RolContratos e FiscalGestor</div>
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab(this,'tab-rc')">RolContratos</div>
-      <div class="tab" onclick="switchTab(this,'tab-fg')">FiscalGestor</div>
+    <div class="pt">Cadastre um novo contrato</div>
+    <div class="ps">Preencha as seções abaixo para registrar o contrato e designar o fiscal/gestor</div>
+    
+    <div id="combined-form">
+      ${frmRC()}
+      ${frmFG()}
+      
+      <div class="card" style="border-top: 3px solid var(--primary);">
+        <div class="cb">
+          <div class="acts" style="justify-content: center; padding: 1rem 0;">
+            <button class="btn btn-p" style="padding: 12px 30px; font-size: 14px;" onclick="saveNC()">💾 Salvar Cadastro Completo</button>
+            <button class="btn btn-s" style="padding: 12px 30px; font-size: 14px;" onclick="pgNC()">🔄 Limpar Tudo</button>
+          </div>
+          <p style="text-align: center; font-size: 11px; color: var(--muted); margin-top: 8px;">
+            <span class="req">*</span> Campos obrigatórios em ambas as seções
+          </p>
+        </div>
+      </div>
     </div>
-    <div id="tab-rc">${frmRC()}</div>
-    <div id="tab-fg" style="display:none">${frmFG()}</div>
+
     <div class="card">
       <div class="ch"><h3>Contratos Cadastrados</h3><span class="tag">${DB.rolContratos.length} registros</span></div>
       <div class="cb">${tblRC()}</div>
@@ -641,416 +707,317 @@
     }
 
     function frmRC() {
-      return `<div class="card"><div class="ch"><h3>RolContratos — Cadastrar Contrato</h3></div><div class="cb">
+      return `<div class="card" style="margin-bottom: 2rem;">
+        <div class="ch" style="background: var(--primary); color: #fff;">
+          <h3 style="color: #fff;">Sessão 1: RolContratos — Dados do Contrato</h3>
+        </div>
+        <div class="cb">
+          <!-- O conteúdo original do formulário permanece, mas sem o botão de salvar aqui -->
+          <div class="section-title">Identificação da Unidade Gestora</div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>CNPJ da UG <span class="req">*</span><span class="maxlen">14 car.</span></label>
+              <input type="text" id="rc-cnpj" maxlength="18" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)">
+            </div>
+            <div class="fgi">
+              <label>ID Contrato PNCP <span class="req">*</span></label>
+              <input type="text" id="rc-idcontratopncp" maxlength="28" placeholder="Ex: 12345678000100-1-000001/2025">
+            </div>
+            <div class="fgi">
+              <label>ID Contratação PNCP <span class="req">*</span></label>
+              <input type="text" id="rc-idcontratacaopncp" maxlength="28" placeholder="ID da contratação de origem">
+            </div>
+          </div>
 
-  <div class="section-title">Identificação da Unidade Gestora</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>CNPJ da UG <span class="req">*</span><span class="hint">Somente números</span><span class="maxlen">14 car.</span></label>
-      <input type="text" id="rc-cnpj" maxlength="18" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)">
-    </div>
-    <div class="fgi">
-      <label>ID Contrato PNCP <span class="req">*</span><span class="maxlen">28 car.</span></label>
-      <input type="text" id="rc-idcontratopncp" maxlength="28" placeholder="Ex: 12345678000100-1-000001/2025">
-    </div>
-    <div class="fgi">
-      <label>ID Contratação PNCP <span class="req">*</span><span class="maxlen">28 car.</span></label>
-      <input type="text" id="rc-idcontratacaopncp" maxlength="28" placeholder="ID da contratação de origem">
-    </div>
-  </div>
+          <div class="section-title">Instrumento Contratual</div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>Tipo de Instrumento <span class="req">*</span></label>
+              <select id="rc-tipo">
+                <option value="">Selecione...</option>
+                <option value="1">1 - Contrato</option><option value="2">2 - Convênio</option>
+                <option value="3">3 - Acordo de Cooperação</option><option value="4">4 - Termo de Adesão</option>
+                <option value="5">5 - Carta Contrato</option><option value="6">6 - Comodato</option>
+                <option value="7">7 - Arrendamento</option><option value="8">8 - Concessão</option>
+                <option value="9">9 - Empenho</option><option value="10">10 - Outros</option>
+              </select>
+            </div>
+            <div class="fgi">
+              <label>Nº do Instrumento <span class="req">*</span></label>
+              <input type="text" id="rc-numinstrumentocontratual" maxlength="20" placeholder="Ex: 001">
+            </div>
+            <div class="fgi">
+              <label>Ano do Instrumento <span class="req">*</span></label>
+              <input type="number" id="rc-anoinstrumentocontratual" min="2000" max="2099" placeholder="aaaa">
+            </div>
+            <div class="fgi">
+              <label>Nº do Processo <span class="req">*</span></label>
+              <input type="text" id="rc-processo" maxlength="50" placeholder="Número do processo">
+            </div>
+            <div class="fgi">
+              <label>Ano do Processo <span class="req">*</span></label>
+              <input type="number" id="rc-anoproc" min="2000" max="2099" placeholder="aaaa">
+            </div>
+            <div class="fgi">
+              <label>Categoria <span class="req">*</span></label>
+              <select id="rc-categoria">
+                <option value="">Selecione...</option>
+                <option value="1">1 - Cessão</option><option value="2">2 - Compras</option>
+                <option value="3">3 - Informática</option><option value="4">4 - Internacional</option>
+                <option value="5">5 - Locação Imóveis</option><option value="6">6 - Mão de Obra</option>
+                <option value="7">7 - Obras</option><option value="8">8 - Serviços</option>
+                <option value="9">9 - Serviços de Engenharia</option><option value="10">10 - Serviços de Saúde</option>
+                <option value="11">11 - Alienação</option>
+              </select>
+            </div>
+          </div>
 
-  <div class="section-title">Instrumento Contratual</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>Tipo de Instrumento <span class="req">*</span></label>
-      <select id="rc-tipo">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Contrato</option><option value="2">2 - Convênio</option>
-        <option value="3">3 - Acordo de Cooperação</option><option value="4">4 - Termo de Adesão</option>
-        <option value="5">5 - Carta Contrato</option><option value="6">6 - Comodato</option>
-        <option value="7">7 - Arrendamento</option><option value="8">8 - Concessão</option>
-        <option value="9">9 - Empenho</option><option value="10">10 - Outros</option>
-      </select>
-    </div>
-    <div class="fgi">
-      <label>Nº do Instrumento Contratual <span class="req">*</span><span class="maxlen">20 car.</span></label>
-      <input type="text" id="rc-numinstrumentocontratual" maxlength="20" placeholder="Ex: 001">
-    </div>
-    <div class="fgi">
-      <label>Ano do Instrumento <span class="req">*</span><span class="maxlen">4 dígitos</span></label>
-      <input type="number" id="rc-anoinstrumentocontratual" min="2000" max="2099" placeholder="aaaa">
-    </div>
-    <div class="fgi">
-      <label>Nº do Processo Adm. <span class="req">*</span><span class="maxlen">50 car.</span></label>
-      <input type="text" id="rc-processo" maxlength="50" placeholder="Número do processo">
-    </div>
-    <div class="fgi">
-      <label>Ano do Processo <span class="req">*</span><span class="maxlen">4 dígitos</span></label>
-      <input type="number" id="rc-anoproc" min="2000" max="2099" placeholder="aaaa">
-    </div>
-    <div class="fgi">
-      <label>Categoria <span class="req">*</span></label>
-      <select id="rc-categoria">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Cessão</option><option value="2">2 - Compras</option>
-        <option value="3">3 - Informática</option><option value="4">4 - Internacional</option>
-        <option value="5">5 - Locação Imóveis</option><option value="6">6 - Mão de Obra</option>
-        <option value="7">7 - Obras</option><option value="8">8 - Serviços</option>
-        <option value="9">9 - Serviços de Engenharia</option><option value="10">10 - Serviços de Saúde</option>
-        <option value="11">11 - Alienação de bens móveis/imóveis</option>
-      </select>
-    </div>
-  </div>
+          <div class="section-title">Contratado</div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>Tipo de Pessoa <span class="req">*</span></label>
+              <select id="rc-tppessoa">
+                <option value="">Selecione...</option>
+                <option value="F">F - Física</option>
+                <option value="J">J - Jurídica</option>
+                <option value="E">E - Estrangeira</option>
+              </select>
+            </div>
+            <div class="fgi s2">
+              <label>CNPJ/CPF do Contratado <span class="req">*</span></label>
+              <input type="text" id="rc-contratado" maxlength="14" placeholder="Somente números">
+            </div>
+          </div>
 
-  <div class="section-title">Contratado</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>Tipo de Pessoa <span class="req">*</span></label>
-      <select id="rc-tppessoa" onchange="rcTpPessoa(this.value)">
-        <option value="">Selecione...</option>
-        <option value="F">F - Física</option>
-        <option value="J">J - Jurídica</option>
-        <option value="E">E - Estrangeira</option>
-      </select>
-    </div>
-    <div class="fgi s2">
-      <label>CNPJ/CPF do Contratado <span class="req">*</span><span class="hint">Somente números, sem pontuação</span><span class="maxlen">14 car.</span></label>
-      <input type="text" id="rc-contratado" maxlength="14" placeholder="Somente números">
-    </div>
-  </div>
+          <div class="section-title">Objeto e Valores</div>
+          <div class="fg c1">
+            <div class="fgi">
+              <label>Objeto da Contratação <span class="req">*</span></label>
+              <textarea id="rc-objeto" maxlength="5120" rows="3" placeholder="Descreva o objeto"></textarea>
+            </div>
+          </div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>Valor Contratado (R$) <span class="req">*</span></label>
+              <input type="number" id="rc-valini" min="0" step="0.01" placeholder="0,00">
+            </div>
+            <div class="fgi">
+              <label>Receita ou Despesa <span class="req">*</span></label>
+              <select id="rc-recdes">
+                <option value="">Selecione...</option>
+                <option value="D">D - Despesa</option>
+                <option value="R">R - Receita</option>
+              </select>
+            </div>
+            <div class="fgi">
+              <label>Subcontratação <span class="req">*</span></label>
+              <select id="rc-subcontrato">
+                <option value="">Selecione...</option>
+                <option value="S">S - Sim</option>
+                <option value="N">N - Não</option>
+              </select>
+            </div>
+          </div>
 
-  <div class="section-title">Objeto e Valores</div>
-  <div class="fg c1">
-    <div class="fgi">
-      <label>Objeto da Contratação <span class="req">*</span><span class="maxlen">5120 car.</span></label>
-      <textarea id="rc-objeto" maxlength="5120" rows="3" placeholder="Descreva o objeto da contratação"></textarea>
-    </div>
-  </div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>Valor Contratado (R$) <span class="req">*</span></label>
-      <input type="number" id="rc-valini" min="0" step="0.01" placeholder="0,00">
-    </div>
-    <div class="fgi">
-      <label>Receita ou Despesa <span class="req">*</span></label>
-      <select id="rc-recdes">
-        <option value="">Selecione...</option>
-        <option value="D">D - Despesa</option>
-        <option value="R">R - Receita</option>
-      </select>
-    </div>
-    <div class="fgi">
-      <label>Permite Subcontratação <span class="req">*</span></label>
-      <select id="rc-subcontrato">
-        <option value="">Selecione...</option>
-        <option value="S">S - Sim</option>
-        <option value="N">N - Não</option>
-      </select>
-    </div>
-  </div>
+          <div class="section-title">Vigência</div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>Vigência Indeterminada <span class="req">*</span></label>
+              <select id="rc-vigenciaindeterminada" onchange="rcVigInd(this.value)">
+                <option value="">Selecione...</option>
+                <option value="S">S - Sim</option>
+                <option value="N">N - Não</option>
+              </select>
+            </div>
+            <div class="fgi">
+              <label>Início Vigência <span class="req">*</span></label>
+              <input type="date" id="rc-dataviginicio">
+            </div>
+            <div class="fgi cond-field" id="cf-rc-datavigfim">
+              <label>Fim Vigência <span class="req">*</span></label>
+              <input type="date" id="rc-datavigfim">
+            </div>
+            <div class="fgi">
+              <label>Data Assinatura <span class="req">*</span></label>
+              <input type="date" id="rc-dataassinatura">
+            </div>
+            <div class="fgi">
+              <label>Data Publicação <span class="req">*</span></label>
+              <input type="date" id="rc-datapub">
+            </div>
+          </div>
 
-  <div class="section-title">Vigência</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>Vigência Indeterminada <span class="req">*</span></label>
-      <select id="rc-vigenciaindeterminada" onchange="rcVigInd(this.value)">
-        <option value="">Selecione...</option>
-        <option value="S">S - Sim</option>
-        <option value="N">N - Não</option>
-      </select>
-    </div>
-    <div class="fgi">
-      <label>Data de Início da Vigência <span class="req">*</span></label>
-      <input type="date" id="rc-dataviginicio">
-    </div>
-    <div class="fgi cond-field" id="cf-rc-datavigfim">
-      <label>Data Final da Vigência <span class="req">*</span><span class="hint">Se vigência determinada</span></label>
-      <input type="date" id="rc-datavigfim">
-    </div>
-    <div class="fgi">
-      <label>Data de Assinatura <span class="req">*</span></label>
-      <input type="date" id="rc-dataassinatura">
-    </div>
-    <div class="fgi">
-      <label>Data de Publicação <span class="req">*</span></label>
-      <input type="date" id="rc-datapub">
-    </div>
-  </div>
+          <div class="section-title">Publicação e Garantia</div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>Local Publicação <span class="req">*</span></label>
+              <select id="rc-localpub">
+                <option value="">Selecione...</option>
+                <option value="1">1 - Diário Oficial</option><option value="6">6 - PNCP</option>
+                <option value="3">3 - Sítio oficial</option>
+              </select>
+            </div>
+            <div class="fgi s2">
+              <label>URL de Publicação <span class="req">*</span></label>
+              <input type="url" id="rc-urlpublicacao" placeholder="https://">
+            </div>
+            <div class="fgi">
+              <label>Possui Garantia <span class="req">*</span></label>
+              <select id="rc-garantia" onchange="rcGarantia(this.value)">
+                <option value="">Selecione...</option>
+                <option value="S">S - Sim</option>
+                <option value="N">N - Não</option>
+              </select>
+            </div>
+            <div class="fgi cond-field" id="cf-rc-valorgarantia">
+              <label>Valor Garantia (R$) <span class="req">*</span></label>
+              <input type="number" id="rc-valorgarantia" step="0.01" placeholder="0,00">
+            </div>
+            <div class="fgi cond-field" id="cf-rc-modalidadegarantia">
+              <label>Modalidade <span class="req">*</span></label>
+              <select id="rc-modalidadegarantia">
+                <option value="">Selecione...</option>
+                <option value="3">3 - Seguro-garantia</option><option value="4">4 - Fiança-bancária</option>
+              </select>
+            </div>
+          </div>
 
-  <div class="section-title">Publicação</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>Local de Publicação <span class="req">*</span></label>
-      <select id="rc-localpub">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Diário Oficial</option><option value="2">2 - Jornal de circulação</option>
-        <option value="3">3 - Sítio eletrônico oficial</option><option value="4">4 - Portal de Transparência</option>
-        <option value="5">5 - Afixação em ambiente público</option><option value="6">6 - PNCP</option>
-      </select>
-    </div>
-    <div class="fgi s2">
-      <label>URL de Publicação <span class="req">*</span><span class="maxlen">1024 car.</span></label>
-      <input type="url" id="rc-urlpublicacao" maxlength="1024" placeholder="https://">
-    </div>
-  </div>
-
-  <div class="section-title">Garantia</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>Possui Garantia <span class="req">*</span></label>
-      <select id="rc-garantia" onchange="rcGarantia(this.value)">
-        <option value="">Selecione...</option>
-        <option value="S">S - Sim</option>
-        <option value="N">N - Não</option>
-      </select>
-    </div>
-    <div class="fgi cond-field" id="cf-rc-valorgarantia">
-      <label>Valor da Garantia (R$) <span class="req">*</span></label>
-      <input type="number" id="rc-valorgarantia" min="0" step="0.01" placeholder="0,00">
-    </div>
-    <div class="fgi cond-field" id="cf-rc-modalidadegarantia">
-      <label>Modalidade da Garantia <span class="req">*</span></label>
-      <select id="rc-modalidadegarantia">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Caução dinheiro</option><option value="2">2 - Caução títulos</option>
-        <option value="3">3 - Seguro-garantia</option><option value="4">4 - Fiança-bancária</option>
-        <option value="5">5 - Título capitalização</option>
-      </select>
-    </div>
-    <div class="fgi cond-field" id="cf-rc-bensgarantia">
-      <label>Entrega de Bens pela Adm. <span class="req">*</span></label>
-      <select id="rc-bensgarantia" onchange="rcBensGar(this.value)">
-        <option value="">Selecione...</option>
-        <option value="S">S - Sim</option>
-        <option value="N">N - Não</option>
-      </select>
-    </div>
-    <div class="fgi cond-field" id="cf-rc-valbensgarantia">
-      <label>Valor dos Bens Entregues (R$) <span class="req">*</span></label>
-      <input type="number" id="rc-valbensgarantia" min="0" step="0.01" placeholder="0,00">
-    </div>
-  </div>
-
-  <div class="section-title">Arquivo do Instrumento Contratual</div>
-  <div class="fg c1">
-    <div class="fgi">
-      <label>Nome do arquivo PDF <span class="req">*</span><span class="hint">Contrato, carta-contrato, convênio ou equivalente — máx. 20 car.</span></label>
-      <div class="upload-name-row">
-        <input type="text" id="rc-arquivo" maxlength="20" placeholder="Ex: contrato 01-2025.pdf" oninput="upSyncName('rc')">
-        <button class="btn btn-s btn-sm" type="button" onclick="document.getElementById('rc-file-input').click()">📎 Importar arquivo</button>
-        <input type="file" id="rc-file-input" accept=".pdf,.PDF" style="display:none" onchange="upHandleFile('rc',this)">
-      </div>
-      <div class="upload-box" id="rc-upload-box" onclick="document.getElementById('rc-file-input').click()">
-        <div class="upload-inner">
-          <span class="upload-icon" id="rc-upload-icon">📄</span>
-          <div class="upload-text">
-            <div class="up-hint" id="rc-upload-hint">Clique para selecionar o arquivo PDF do contrato ou equivalente</div>
-            <div id="rc-upload-status"></div>
+          <div class="section-title">Arquivo do Instrumento Contratual</div>
+          <div class="fg c1">
+            <div class="fgi">
+              <label>Nome do arquivo PDF <span class="req">*</span></label>
+              <div class="upload-name-row">
+                <input type="text" id="rc-arquivo" maxlength="20" placeholder="Ex: contrato01.pdf" oninput="upSyncName('rc')">
+                <button class="btn btn-s btn-sm" type="button" onclick="document.getElementById('rc-file-input').click()">📎 Importar PDF</button>
+                <input type="file" id="rc-file-input" accept=".pdf,.PDF" style="display:none" onchange="upHandleFile('rc',this)">
+              </div>
+              <div class="upload-box" id="rc-upload-box" onclick="document.getElementById('rc-file-input').click()">
+                <div class="upload-inner">
+                  <span class="upload-icon" id="rc-upload-icon">📄</span>
+                  <div class="upload-text">
+                    <div class="up-hint" id="rc-upload-hint">Clique para selecionar o PDF do contrato</div>
+                    <div id="rc-upload-status"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="acts">
-    <button class="btn btn-p" onclick="saveRC()">Salvar RolContrato</button>
-    <button class="btn btn-s" onclick="clearPfx('rc-')">Limpar</button>
-  </div>
-</div></div>`;
+      </div>`;
     }
 
     function rcVigInd(v) {
       document.getElementById('cf-rc-datavigfim').classList.toggle('show', v === 'N');
     }
     function rcGarantia(v) {
-      ['valorgarantia', 'modalidadegarantia', 'bensgarantia'].forEach(f => {
+      ['valorgarantia', 'modalidadegarantia'].forEach(f => {
         document.getElementById('cf-rc-' + f)?.classList.toggle('show', v === 'S');
       });
-      if (v !== 'S') document.getElementById('cf-rc-valbensgarantia')?.classList.remove('show');
-    }
-    function rcBensGar(v) {
-      document.getElementById('cf-rc-valbensgarantia')?.classList.toggle('show', v === 'S');
-    }
-    function rcTpPessoa(v) { }
-
-    function saveRC() {
-      const req = ['cnpj', 'idcontratopncp', 'idcontratacaopncp', 'tipo', 'processo', 'anoproc', 'numinstrumentocontratual', 'anoinstrumentocontratual', 'categoria', 'tppessoa', 'contratado', 'objeto', 'valini', 'vigenciaindeterminada', 'dataviginicio', 'dataassinatura', 'datapub', 'localpub', 'urlpublicacao', 'recdes', 'garantia', 'subcontrato', 'arquivo'];
-      const ok = markReq(req, 'rc-');
-      const vig = getVal('rc-vigenciaindeterminada');
-      let condOk = true;
-      if (vig === 'N' && !getVal('rc-datavigfim')) {
-        document.getElementById('rc-datavigfim')?.classList.add('inv'); condOk = false;
-      }
-      const gar = getVal('rc-garantia');
-      if (gar === 'S') {
-        if (!getVal('rc-valorgarantia')) { document.getElementById('rc-valorgarantia')?.classList.add('inv'); condOk = false; }
-        if (!getVal('rc-modalidadegarantia')) { document.getElementById('rc-modalidadegarantia')?.classList.add('inv'); condOk = false; }
-        if (!getVal('rc-bensgarantia')) { document.getElementById('rc-bensgarantia')?.classList.add('inv'); condOk = false; }
-        if (getVal('rc-bensgarantia') === 'S' && !getVal('rc-valbensgarantia')) {
-          document.getElementById('rc-valbensgarantia')?.classList.add('inv'); condOk = false;
-        }
-      }
-      const upOk = upValidate('rc');
-      if (!ok || !condOk || !upOk) { toast('Preencha todos os campos obrigatórios e importe o arquivo do contrato.', 'err'); return; }
-      const vals = { _id: uid() };
-      [...req, 'datavigfim', 'valorgarantia', 'modalidadegarantia', 'bensgarantia', 'valbensgarantia'].forEach(f => {
-        const el = document.getElementById('rc-' + f);
-        if (el) vals[f] = el.value.trim();
-      });
-      DB.rolContratos.push(vals);
-      clearPfx('rc-');
-      upCommit('rc');
-      toast('RolContrato salvo!');
-      pgNC();
     }
 
     function frmFG() {
-      return `<div class="card"><div class="ch"><h3>FiscalGestor — Designar Agente</h3></div><div class="cb">
+      return `<div class="card" style="margin-bottom: 2rem;">
+        <div class="ch" style="background: var(--primary); color: #fff;">
+          <h3 style="color: #fff;">Sessão 2: FiscalGestor — Designar Agente</h3>
+        </div>
+        <div class="cb">
+          <div class="section-title">Identificação do Agente</div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>CNPJ da UG <span class="req">*</span></label>
+              <input type="text" id="fg-cnpj" maxlength="18" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)">
+            </div>
+            <div class="fgi">
+              <label>Tipo de Agente <span class="req">*</span></label>
+              <select id="fg-tipoagente" onchange="fgTipoAgente(this.value)">
+                <option value="">Selecione...</option>
+                <option value="1">1 - Fiscal de contrato</option>
+                <option value="2">2 - Gestor de contrato</option>
+                <option value="3">3 - Terceiro contratado</option>
+              </select>
+            </div>
+            <div class="fgi">
+              <label>Forma Identificação <span class="req">*</span></label>
+              <select id="fg-identificadoragente" onchange="fgIdent(this.value)">
+                <option value="">Selecione...</option>
+                <option value="1">1 - CPF</option>
+                <option value="2">2 - CNPJ</option>
+              </select>
+            </div>
+          </div>
 
-  <div class="section-title">Identificação</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>CNPJ da UG <span class="req">*</span><span class="maxlen">14 car.</span></label>
-      <input type="text" id="fg-cnpj" maxlength="18" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)">
-    </div>
-    <div class="fgi s2">
-      <label>ID Contrato PNCP <span class="req">*</span><span class="maxlen">28 car.</span></label>
-      <select id="fg-idcontratopncp">
-        <option value="">Selecione o contrato cadastrado...</option>
-        ${DB.rolContratos.map(c => `<option value="${c.idcontratopncp}">${c.idcontratopncp || c.numinstrumentocontratual}</option>`).join('')}
-        <option value="_manual">Digitar manualmente</option>
-      </select>
-    </div>
-    <div class="fgi cond-field s3" id="cf-fg-idpncp-manual">
-      <label>ID Contrato PNCP (manual) <span class="req">*</span></label>
-      <input type="text" id="fg-idcontratopncp-manual" maxlength="28" placeholder="ID do contrato">
-    </div>
-  </div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>Nome do Agente <span class="req">*</span></label>
+              <input type="text" id="fg-nomeagente" maxlength="200" placeholder="Nome completo">
+            </div>
+            <div class="fgi cond-field" id="cf-fg-cpfagente">
+              <label>CPF Agente <span class="req">*</span></label>
+              <input type="text" id="fg-cpfagente" maxlength="14" placeholder="000.000.000-00" oninput="maskCPF(this)">
+            </div>
+            <div class="fgi cond-field" id="cf-fg-cnpjagente">
+              <label>CNPJ Agente <span class="req">*</span></label>
+              <input type="text" id="fg-cnpjagente" maxlength="18" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)">
+            </div>
+            <div class="fgi">
+              <label>Natureza do Cargo <span class="req">*</span></label>
+              <select id="fg-naturezacargo" onchange="fgNatureza(this.value)">
+                <option value="">Selecione...</option>
+                <option value="1">1 - Efetivo civil</option><option value="5">5 - Comissionado</option>
+                <option value="6">6 - Terceiro</option><option value="7">7 - Outro</option>
+              </select>
+            </div>
+          </div>
 
-  <div class="section-title">Dados do Agente</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>Tipo de Agente <span class="req">*</span></label>
-      <select id="fg-tipoagente" onchange="fgTipoAgente(this.value)">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Fiscal de contrato</option>
-        <option value="2">2 - Gestor de contrato</option>
-        <option value="3">3 - Terceiro contratado</option>
-      </select>
-    </div>
-    <div class="fgi">
-      <label>Forma de Identificação <span class="req">*</span></label>
-      <select id="fg-identificadoragente" onchange="fgIdent(this.value)">
-        <option value="">Selecione...</option>
-        <option value="1">1 - CPF</option>
-        <option value="2">2 - CNPJ</option>
-      </select>
-    </div>
-    <div class="fgi">
-      <label>Nome do Agente <span class="req">*</span><span class="maxlen">200 car.</span></label>
-      <input type="text" id="fg-nomeagente" maxlength="200" placeholder="Nome completo do agente">
-    </div>
-    <div class="fgi cond-field" id="cf-fg-cpfagente">
-      <label>CPF do Agente <span class="req">*</span><span class="maxlen">11 car.</span></label>
-      <input type="text" id="fg-cpfagente" maxlength="14" placeholder="000.000.000-00" oninput="maskCPF(this)">
-    </div>
-    <div class="fgi cond-field" id="cf-fg-cnpjagente">
-      <label>CNPJ do Agente <span class="req">*</span><span class="maxlen">14 car.</span></label>
-      <input type="text" id="fg-cnpjagente" maxlength="18" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)">
-    </div>
-    <div class="fgi">
-      <label>Natureza do Cargo <span class="req">*</span></label>
-      <select id="fg-naturezacargo" onchange="fgNatureza(this.value)">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Efetivo civil</option><option value="2">2 - Efetivo militar</option>
-        <option value="3">3 - Eletivo</option><option value="4">4 - Empregado público</option>
-        <option value="5">5 - Comissionado</option><option value="6">6 - Terceiro contratado</option>
-        <option value="7">7 - Outro</option>
-      </select>
-    </div>
-    <div class="fgi s2 cond-field" id="cf-fg-descricaonatureza">
-      <label>Descrição da Natureza do Cargo <span class="req">*</span><span class="maxlen">250 car.</span></label>
-      <input type="text" id="fg-descricaonatureza" maxlength="250" placeholder="Descreva a natureza do cargo">
-    </div>
-  </div>
+          <div class="fg c3">
+            <div class="fgi cond-field" id="cf-fg-classificacaofiscal">
+              <label>Classificação Fiscal <span class="req">*</span></label>
+              <select id="fg-classificacaofiscal">
+                <option value="1">1 - Fiscal titular</option><option value="2">2 - Fiscal suplente</option>
+              </select>
+            </div>
+            <div class="fgi cond-field" id="cf-fg-classificacaogestor">
+              <label>Classificação Gestor <span class="req">*</span></label>
+              <select id="fg-classificacaogestor">
+                <option value="1">1 - Gestor titular</option><option value="2">2 - Gestor suplente</option>
+              </select>
+            </div>
+          </div>
 
-  <div class="section-title">Classificação</div>
-  <div class="fg c3">
-    <div class="fgi cond-field" id="cf-fg-classificacaofiscal">
-      <label>Classificação do Fiscal <span class="req">*</span></label>
-      <select id="fg-classificacaofiscal" onchange="fgClsFiscal(this.value)">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Fiscal titular</option><option value="2">2 - Fiscal suplente</option>
-        <option value="3">3 - Fiscal técnico</option><option value="4">4 - Fiscal administrativo</option>
-        <option value="5">5 - Fiscal requisitante</option><option value="6">6 - Outro fiscal</option>
-      </select>
-    </div>
-    <div class="fgi s2 cond-field" id="cf-fg-descricaofiscal">
-      <label>Descrição do Fiscal <span class="req">*</span><span class="maxlen">250 car.</span></label>
-      <input type="text" id="fg-descricaofiscal" maxlength="250" placeholder="Descreva a classificação">
-    </div>
-    <div class="fgi cond-field" id="cf-fg-classificacaogestor">
-      <label>Classificação do Gestor <span class="req">*</span></label>
-      <select id="fg-classificacaogestor" onchange="fgClsGestor(this.value)">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Gestor titular</option>
-        <option value="2">2 - Gestor suplente</option>
-        <option value="3">3 - Outro</option>
-      </select>
-    </div>
-    <div class="fgi s2 cond-field" id="cf-fg-descricaogestor">
-      <label>Descrição do Gestor <span class="req">*</span><span class="maxlen">250 car.</span></label>
-      <input type="text" id="fg-descricaogestor" maxlength="250" placeholder="Descreva a classificação">
-    </div>
-  </div>
-
-  <div class="section-title">Ato de Designação</div>
-  <div class="fg c3">
-    <div class="fgi">
-      <label>Tipo de Designação <span class="req">*</span></label>
-      <select id="fg-designacao" onchange="fgDesignacao(this.value)">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Decreto</option><option value="2">2 - Portaria</option>
-        <option value="3">3 - Ofício</option><option value="4">4 - Termo nos autos</option>
-        <option value="5">5 - Contrato</option><option value="6">6 - Outro</option>
-      </select>
-    </div>
-    <div class="fgi">
-      <label>Nº do Ato de Designação <span class="req">*</span><span class="maxlen">16 car.</span></label>
-      <input type="text" id="fg-numerodesignacao" maxlength="16" placeholder="Número do ato">
-    </div>
-    <div class="fgi">
-      <label>Ano da Designação <span class="req">*</span><span class="maxlen">4 dígitos</span></label>
-      <input type="number" id="fg-anodesignacao" min="2000" max="2099" placeholder="aaaa">
-    </div>
-    <div class="fgi cond-field" id="cf-fg-descricaodesignacao">
-      <label>Descrição da Designação <span class="req">*</span><span class="maxlen">250 car.</span></label>
-      <input type="text" id="fg-descricaodesignacao" maxlength="250" placeholder="Descreva o tipo de designação">
-    </div>
-    <div class="fgi">
-      <label>Data de Publicação do Ato <span class="req">*</span></label>
-      <input type="date" id="fg-datadesignacao">
-    </div>
-    <div class="fgi">
-      <label>Local de Publicação <span class="req">*</span></label>
-      <select id="fg-localdesignacao">
-        <option value="">Selecione...</option>
-        <option value="1">1 - Diário Oficial</option><option value="2">2 - Jornal de circulação</option>
-        <option value="3">3 - Sítio eletrônico oficial</option><option value="4">4 - Portal de Transparência</option>
-        <option value="5">5 - Afixação em ambiente público</option><option value="6">6 - PNCP</option>
-      </select>
-    </div>
-    <div class="fgi s3">
-      <label>URL de Publicação do Ato <span class="req">*</span><span class="maxlen">1024 car.</span></label>
-      <input type="url" id="fg-urldesignacao" maxlength="1024" placeholder="https://">
-    </div>
-  </div>
-
-  <div class="acts">
-    <button class="btn btn-p" onclick="saveFG()">Salvar FiscalGestor</button>
-    <button class="btn btn-s" onclick="clearPfx('fg-')">Limpar</button>
-  </div>
-</div></div>`;
+          <div class="section-title">Ato de Designação</div>
+          <div class="fg c3">
+            <div class="fgi">
+              <label>Tipo Designação <span class="req">*</span></label>
+              <select id="fg-designacao">
+                <option value="2">2 - Portaria</option><option value="1">1 - Decreto</option>
+                <option value="5">5 - Contrato</option>
+              </select>
+            </div>
+            <div class="fgi">
+              <label>Nº do Ato <span class="req">*</span></label>
+              <input type="text" id="fg-numerodesignacao" maxlength="16" placeholder="Número">
+            </div>
+            <div class="fgi">
+              <label>Ano Designação <span class="req">*</span></label>
+              <input type="number" id="fg-anodesignacao" min="2000" max="2099" placeholder="aaaa">
+            </div>
+            <div class="fgi">
+              <label>Data Publicação Ato <span class="req">*</span></label>
+              <input type="date" id="fg-datadesignacao">
+            </div>
+            <div class="fgi">
+              <label>Local Publicação <span class="req">*</span></label>
+              <select id="fg-localdesignacao">
+                <option value="1">1 - Diário Oficial</option><option value="6">6 - PNCP</option>
+              </select>
+            </div>
+            <div class="fgi s3">
+              <label>URL de Publicação do Ato <span class="req">*</span></label>
+              <input type="url" id="fg-urldesignacao" placeholder="https://">
+            </div>
+          </div>
+        </div>
+      </div>`;
     }
 
     function fgTipoAgente(v) {
@@ -1067,17 +1034,56 @@
     function fgClsGestor(v) { document.getElementById('cf-fg-descricaogestor')?.classList.toggle('show', v === '3'); }
     function fgDesignacao(v) { document.getElementById('cf-fg-descricaodesignacao')?.classList.toggle('show', v === '6'); }
 
-    function saveFG() {
-      const req = ['cnpj', 'tipoagente', 'identificadoragente', 'nomeagente', 'naturezacargo', 'designacao', 'numerodesignacao', 'anodesignacao', 'datadesignacao', 'localdesignacao', 'urldesignacao'];
-      if (!markReq(req, 'fg-')) { toast('Preencha os campos obrigatórios.', 'err'); return; }
-      const vals = { _id: uid() };
-      const all = [...req, 'idcontratopncp', 'cpfagente', 'cnpjagente', 'descricaonatureza', 'classificacaofiscal', 'descricaofiscal', 'classificacaogestor', 'descricaogestor', 'descricaodesignacao'];
-      all.forEach(f => { const el = document.getElementById('fg-' + f); if (el) vals[f] = el.value.trim(); });
-      if (vals.idcontratopncp === '_manual') vals.idcontratopncp = getVal('fg-idcontratopncp-manual');
-      DB.fiscalGestor.push(vals);
-      clearPfx('fg-');
-      toast('FiscalGestor salvo!');
-      pgNC();
+    function saveNC() {
+      // --- Validação RolContratos ---
+      const rc_req = ['cnpj', 'idcontratopncp', 'idcontratacaopncp', 'tipo', 'processo', 'anoproc', 'numinstrumentocontratual', 'anoinstrumentocontratual', 'categoria', 'tppessoa', 'contratado', 'objeto', 'valini', 'vigenciaindeterminada', 'dataviginicio', 'dataassinatura', 'datapub', 'localpub', 'urlpublicacao', 'recdes', 'garantia', 'subcontrato', 'arquivo'];
+      const rc_ok = markReq(rc_req, 'rc-');
+      
+      const vig = getVal('rc-vigenciaindeterminada');
+      let rc_condOk = true;
+      if (vig === 'N' && !getVal('rc-datavigfim')) { document.getElementById('rc-datavigfim')?.classList.add('inv'); rc_condOk = false; }
+      
+      const gar = getVal('rc-garantia');
+      if (gar === 'S') {
+        if (!getVal('rc-valorgarantia')) { document.getElementById('rc-valorgarantia')?.classList.add('inv'); rc_condOk = false; }
+        if (!getVal('rc-modalidadegarantia')) { document.getElementById('rc-modalidadegarantia')?.classList.add('inv'); rc_condOk = false; }
+      }
+      
+      const upOk = upValidate('rc');
+
+      // --- Validação FiscalGestor ---
+      const fg_req = ['cnpj', 'tipoagente', 'identificadoragente', 'nomeagente', 'naturezacargo', 'designacao', 'numerodesignacao', 'anodesignacao', 'datadesignacao', 'localdesignacao', 'urldesignacao'];
+      const fg_ok = markReq(fg_req, 'fg-');
+      
+      const ident = getVal('fg-identificadoragente');
+      let fg_condOk = true;
+      if (ident === '1' && !getVal('fg-cpfagente')) { document.getElementById('fg-cpfagente')?.classList.add('inv'); fg_condOk = false; }
+      if (ident === '2' && !getVal('fg-cnpjagente')) { document.getElementById('fg-cnpjagente')?.classList.add('inv'); fg_condOk = false; }
+
+      if (!rc_ok || !rc_condOk || !upOk || !fg_ok || !fg_condOk) {
+        toast('Erro: Preencha todos os campos obrigatórios em ambas as seções.', 'err');
+        return;
+      }
+
+      // --- Salvamento RolContratos ---
+      const rc_vals = { _id: uid() };
+      [...rc_req, 'datavigfim', 'valorgarantia', 'modalidadegarantia'].forEach(f => {
+        const el = document.getElementById('rc-' + f);
+        if (el) rc_vals[f] = el.value.trim();
+      });
+      DB.rolContratos.push(rc_vals);
+      upCommit('rc');
+
+      // --- Salvamento FiscalGestor ---
+      const fg_vals = { _id: uid(), idcontratopncp: rc_vals.idcontratopncp };
+      [...fg_req, 'cpfagente', 'cnpjagente', 'classificacaofiscal', 'classificacaogestor'].forEach(f => {
+        const el = document.getElementById('fg-' + f);
+        if (el) fg_vals[f] = el.value.trim();
+      });
+      DB.fiscalGestor.push(fg_vals);
+
+      toast('Cadastro completo realizado com sucesso!', 'ok');
+      pgNC(); // Recarrega a página para limpar e atualizar tabela
     }
 
     function tblRC() {
@@ -1101,7 +1107,7 @@
     function pgNO() {
       const m = document.getElementById('main');
       m.innerHTML = `
-    <div class="pt">Fluxo B — Novas Obras</div>
+    <div class="pt">Cadastre uma nova obra</div>
     <div class="ps">RolObras e RespTecnico</div>
     <div class="tabs">
       <div class="tab active" onclick="switchTab(this,'tab-ro')">RolObras</div>
@@ -1471,7 +1477,7 @@
     function pgAC() {
       const m = document.getElementById('main');
       m.innerHTML = `
-    <div class="pt">Fluxo C — Acompanhamento de Contratos</div>
+    <div class="pt">Registre uma alteração contratual</div>
     <div class="ps">Alterações contratuais (Termos Aditivos e Apostilamentos)</div>
     ${frmAC()}
     <div class="card">
@@ -1939,7 +1945,7 @@
     function pgAO() {
       const m = document.getElementById('main');
       m.innerHTML = `
-    <div class="pt">Fluxo D — Acompanhamento de Obras</div>
+    <div class="pt">Registre uma medição</div>
     <div class="ps">Medições e progresso físico-financeiro</div>
     ${frmAO()}
     <div class="card">
@@ -2697,7 +2703,7 @@
     }
 
     // ===================== INIT
-    renderPage('dash');
+    showPage('home');
   </script>
 </body>
 
