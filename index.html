@@ -80,7 +80,7 @@
     <main id="main"></main>
   </div>
   <footer class="main-footer">
-    Desenvolvido pela <a href="https://semec.portovelho.ro.gov.br/" target="_blank">SEMEC</a>
+    Desenvolvido pela <a href="https://semec.portovelho.ro.gov.br/" target="_blank">SEMEC</a> - Versão de testes
   </footer>
 
   <div class="toast" id="toast"></div>
@@ -2149,34 +2149,34 @@
       x += `  <MesAnoMovimento>${mesAnoDate(mes, ano)}</MesAnoMovimento>\n`;
       DB.rolContratos.forEach(r => {
         x += `  <RolContratos>\n`;
-x += tagR('cnpj', digits(r.cnpj));
-         x += tag('idcontratopncp', r.idcontratopncp);
-         x += tag('idcontratacaopncp', r.idcontratacaopncp);
-         x += tag('tipo', r.tipo);
-         x += tagR('processo', r.processo);
-         x += tagR('anoproc', r.anoproc);
-         x += tagR('numinstrumentocontratual', r.numinstrumentocontratual);
-         x += tagR('anoinstrumentocontratual', r.anoinstrumentocontratual);
-         x += tagR('categoria', r.categoria);
-         x += tagR('tppessoa', r.tppessoa);
-         x += tagR('contratado', digits(r.contratado));
-         x += tagR('objeto', r.objeto);
-         x += tagR('valini', r.valini ? parseFloat(r.valini).toFixed(2) : '0.00');
-         x += tagR('vigenciaindeterminada', r.vigenciaindeterminada);
-         x += tagR('dataviginicio', r.dataviginicio);
-         x += tag('datavigfim', r.vigenciaindeterminada === 'S' ? '' : (r.datavigfim || ''));
-         x += tagR('dataassinatura', r.dataassinatura);
-         x += tagR('datapub', r.datapub);
-         x += tagR('localpub', r.localpub);
-         x += tagR('urlpublicacao', r.urlpublicacao);
-         x += tagR('recdes', r.recdes);
-         x += tagR('garantia', r.garantia);
-         x += tag('valorgarantia', r.garantia === 'S' ? (r.valorgarantia ? parseFloat(r.valorgarantia).toFixed(2) : '') : '');
-         x += tag('modalidadegarantia', r.garantia === 'S' ? (r.modalidadegarantia || '') : '');
-         x += tag('bensgarantia', r.garantia === 'S' ? (r.bensgarantia || '') : '');
-         x += tag('valbensgarantia', r.bensgarantia === 'S' ? (r.valbensgarantia ? parseFloat(r.valbensgarantia).toFixed(2) : '') : '');
-         x += tag('subcontrato', r.subcontrato);
-         x += tagR('arquivo', r.arquivo);
+        x += tagR('cnpj', digits(r.cnpj));
+        x += tag('idcontratopncp', r.idcontratopncp);
+        x += tag('idcontratacaopncp', r.idcontratacaopncp);
+        x += tag('tipo', r.tipo);
+        x += tagR('processo', r.processo);
+        x += tagR('anoproc', r.anoproc);
+        x += tagR('numinstrumentocontratual', r.numinstrumentocontratual);
+        x += tagR('anoinstrumentocontratual', r.anoinstrumentocontratual);
+        x += tagR('categoria', r.categoria);
+        x += tagR('tppessoa', r.tppessoa);
+        x += tagR('contratado', digits(r.contratado));
+        x += tagR('objeto', r.objeto);
+        x += tagR('valini', r.valini ? parseFloat(r.valini).toFixed(2) : '0.00');
+        x += tagR('vigenciaindeterminada', r.vigenciaindeterminada);
+        x += tagR('dataviginicio', r.dataviginicio);
+        x += tag('datavigfim', r.vigenciaindeterminada === 'S' ? '' : (r.datavigfim || ''));
+        x += tagR('dataassinatura', r.dataassinatura);
+        x += tagR('datapub', r.datapub);
+        x += tagR('localpub', r.localpub);
+        x += tagR('urlpublicacao', r.urlpublicacao);
+        x += tagR('recdes', r.recdes);
+        x += tagR('garantia', r.garantia);
+        x += tag('valorgarantia', r.garantia === 'S' ? (r.valorgarantia ? parseFloat(r.valorgarantia).toFixed(2) : '') : '');
+        x += tag('modalidadegarantia', r.garantia === 'S' ? (r.modalidadegarantia || '') : '');
+        x += tag('bensgarantia', r.garantia === 'S' ? (r.bensgarantia || '') : '');
+        x += tag('valbensgarantia', r.bensgarantia === 'S' ? (r.valbensgarantia ? parseFloat(r.valbensgarantia).toFixed(2) : '') : '');
+        x += tag('subcontrato', r.subcontrato);
+        x += tagR('arquivo', r.arquivo);
         x += `  </RolContratos>\n`;
       });
       x += `</Raiz>`;
