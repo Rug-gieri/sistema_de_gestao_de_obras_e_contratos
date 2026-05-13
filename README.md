@@ -111,11 +111,6 @@ Acesse `http://localhost:8080` no navegador.
 │   ├── 🖼️ logo.png                  # Logo da Prefeitura de Porto Velho
 │   └── 🖼️ favicon.ico               # Ícone do site (32x32 px)
 ├── 📄 Layouts-Arquivos-TCERO-Municipio-v.2026.0.xlsx  # Layout oficial TCE-RO
-├── 📄 screenshots/
-│   ├── 🖼️ dashboard.png            # Captura da tela do Dashboard
-│   ├── 🖼️ novo-contrato.png        # Captura do formulário de Novos Contratos
-│   ├── 🖼️ exportacao.png           # Captura da tela de Exportação
-│   └── 🖼️ acompanhamento.png       # Captura do Acompanhamento de Obras
 └── 📄 README.md                     # Este arquivo
 ```
 
@@ -177,27 +172,12 @@ python3 -m http.server 8080
 
 ---
 
-## Capturas de Tela
-
-<!-- Adicione capturas reais nas pastas indicadas acima -->
-
-| Tela | Descrição |
-|------|-----------|
-| ![Dashboard](./screenshots/dashboard.png) | Painel de indicadores com gráficos de evolução mensal |
-| ![Novo Contrato](./screenshots/novo-contrato.png) | Formulário de cadastro de contrato com designação de fiscal |
-| ![Exportação](./screenshots/exportacao.png) | Modal de exportação com seleção de mês/ano |
-| ![Acompanhamento](./screenshots/acompanhamento.png) | Medições de acompanhamento de obras |
-
-> **📌 Nota:** As capturas de tela serão adicionadas em breve.
-
----
-
 ## Melhorias Futuras
 
 ### Prioridade Alta 🔴
 
 - [x] ~~Implementação de camada persistente~~ → **Planejado:** `localStorage` + exportação JSON
-- [ ] **Exportação ZIP completa** — Gerar XML + PDF compactado conforme especificação TCE-RO
+- [ ] **Exportação ZIP completa** — Gerar XML no padrão correto + PDF compactado conforme especificação TCE-RO
 - [ ] **Validação de CNPJ/CPF** — Algoritmo de verificação dos dígitos verificadores
 - [ ] **Persistência local** — Salvar/carregar dados do `localStorage` automaticamente
 
@@ -219,36 +199,6 @@ python3 -m http.server 8080
 - [ ] **Versionamento de exportações** — Histórico de remessas geradas com possibilidade de re-exportação
 - [ ] **Upload de múltiplos arquivos** — Anexar vários documentos por registro (PDFs, imagens)
 - [ ] **Relatórios PDF** — Geração de relatórios em PDF diretamente no navegador
-
----
-
-## Roadmap
-
-```
-v1.0 (2026-Q2) ──► Persistência localStorage + Exportação ZIP funcional
-v1.5 (2026-Q3) ──► Validação CPF/CNPJ + Importação XLSX + Notificações
-v2.0 (2026-Q4) ──► Backend API + Autenticação + Banco de dados
-v2.5 (2027-Q1) ──► PWA + Testes automatizados + Acessibilidade WCAG AA
-```
-
----
-
-## Contribuição
-
-Contribuições são bem-vindas! Para propor melhorias ou reportar problemas:
-
-1. **Abra uma issue** descrevendo a funcionalidade ou bug encontrado
-2. **Faça um fork** do repositório
-3. **Crie uma branch** para sua feature: `git checkout -b feature/minha-feature`
-4. **Commit** suas alterações: `git commit -m "feat: descrição da mudança"`
-5. **Push** para sua branch: `git push origin feature/minha-feature`
-6. **Abra um Pull Request** com descrição detalhada das alterações
-
-### Padrões de Código
-- Variáveis e funções em **camelCase**
-- Templates HTML com indentação de 2 espaços
-- Comentários em JSDoc para funções complexas
-- Mensagens de commit em inglês seguindo [Conventional Commits](https://www.conventionalcommits.org/)
 
 ---
 
