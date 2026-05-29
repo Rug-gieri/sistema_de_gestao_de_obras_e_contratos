@@ -33,9 +33,7 @@
       <!-- Logo oficial — filtro branco sobre fundo azul -->
       <img src="assets/logo.png" alt="Logo Prefeitura de Porto Velho">
       <div>
-        <div style="font-family:var(--font-head);font-size:14px;font-weight:800;color:#fff;line-height:1.1">Prefeitura
-          Municipal</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.6);font-family:var(--font-head)">Porto Velho — Rondônia</div>
+ 
       </div>
     </div>
 
@@ -709,7 +707,7 @@
     function frmRC() {
       return `<div class="card" style="margin-bottom: 2rem;">
         <div class="ch" style="background: var(--primary); color: #fff;">
-          <h3 style="color: #fff;">Sessão 1: RolContratos — Dados do Contrato</h3>
+          <h3 style="color: #fff;">Sessão 1: Dados do Contrato</h3>
         </div>
         <div class="cb">
           <!-- O conteúdo original do formulário permanece, mas sem o botão de salvar aqui -->
@@ -1108,13 +1106,25 @@
       const m = document.getElementById('main');
       m.innerHTML = `
     <div class="pt">Cadastre uma nova obra</div>
-    <div class="ps">RolObras e RespTecnico</div>
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab(this,'tab-ro')">RolObras</div>
-      <div class="tab" onclick="switchTab(this,'tab-rt')">RespTecnico</div>
+    <div class="ps">Preencha as seções abaixo para registrar a obra e o responsável técnico</div>
+    
+    <div id="combined-form">
+      ${frmRO()}
+      ${frmRT()}
+      
+      <div class="card" style="border-top: 3px solid var(--primary);">
+        <div class="cb">
+          <div class="acts" style="justify-content: center; padding: 1rem 0;">
+            <button class="btn btn-p" style="padding: 12px 30px; font-size: 14px;" onclick="saveNO()">💾 Salvar Cadastro Completo</button>
+            <button class="btn btn-s" style="padding: 12px 30px; font-size: 14px;" onclick="pgNO()">🔄 Limpar Tudo</button>
+          </div>
+          <p style="text-align: center; font-size: 11px; color: var(--muted); margin-top: 8px;">
+            <span class="req">*</span> Campos obrigatórios em ambas as seções
+          </p>
+        </div>
+      </div>
     </div>
-    <div id="tab-ro">${frmRO()}</div>
-    <div id="tab-rt" style="display:none">${frmRT()}</div>
+
     <div class="card">
       <div class="ch"><h3>Obras Cadastradas</h3><span class="tag">${DB.rolObras.length} registros</span></div>
       <div class="cb">${tblRO()}</div>
@@ -1122,7 +1132,10 @@
     }
 
     function frmRO() {
-      return `<div class="card"><div class="ch"><h3>RolObras — Cadastrar Obra</h3></div><div class="cb">
+      return `<div class="card" style="margin-bottom: 2rem;">
+        <div class="ch" style="background: var(--primary); color: #fff;">
+          <h3 style="color: #fff;">Sessão 1: Dados da Obra</h3>
+        </div><div class="cb">
 
   <div class="section-title">Identificação</div>
   <div class="fg c3">
@@ -1334,10 +1347,6 @@
     </div>
   </div>
 
-  <div class="acts">
-    <button class="btn btn-p" onclick="saveRO()">Salvar RolObra</button>
-    <button class="btn btn-s" onclick="clearPfx('ro-')">Limpar</button>
-  </div>
 </div></div>`;
     }
 
@@ -1372,7 +1381,10 @@
     }
 
     function frmRT() {
-      return `<div class="card"><div class="ch"><h3>RespTecnico — Responsável Técnico</h3></div><div class="cb">
+      return `<div class="card" style="margin-bottom: 2rem;">
+        <div class="ch" style="background: var(--primary); color: #fff;">
+          <h3 style="color: #fff;">Sessão 2: Responsável Técnico</h3>
+        </div><div class="cb">
 
   <div class="section-title">Identificação</div>
   <div class="fg c3">
@@ -1439,10 +1451,6 @@
     </div>
   </div>
 
-  <div class="acts">
-    <button class="btn btn-p" onclick="saveRT()">Salvar RespTecnico</button>
-    <button class="btn btn-s" onclick="clearPfx('rt-')">Limpar</button>
-  </div>
 </div></div>`;
     }
 
@@ -1454,6 +1462,43 @@
       DB.respTecnico.push(vals);
       clearPfx('rt-');
       toast('RespTecnico salvo!');
+      pgNO();
+    }
+
+    function saveNO() {
+      const ro_req = ['cnpj', 'idcontratopncp', 'idcontratacaopncp', 'tipoinstrumentocontratacao', 'numinstrumentocontratual', 'anoinstrumentocontratual', 'bem', 'desc', 'tipo', 'unidmedida', 'tamanho', 'setor', 'tiposerv', 'qtdend', 'lat', 'long', 'munibge', 'cei', 'processo', 'anoproc', 'planlic', 'planven', 'projcontratante', 'projcontratada'];
+      const ro_ok = markReq(ro_req, 'ro-');
+
+      const qtd = parseInt(getVal('ro-qtdend'));
+      let ro_condOk = true;
+      if (qtd === 1) {
+        ['endereco', 'bairro', 'municipio', 'cep'].forEach(f => {
+          if (!getVal('ro-' + f)) { document.getElementById('ro-' + f)?.classList.add('inv'); ro_condOk = false; }
+        });
+      }
+
+      const upOk = upValidate('ro-planlic') & upValidate('ro-planven') & upValidate('ro-projcontratante') & upValidate('ro-projcontratada');
+
+      const rt_req = ['cnpj', 'idcontratopncp', 'numinstrumentocontratual', 'anoinstrumentocontratual', 'processo', 'anoproc', 'arttipo', 'artnum', 'artdata', 'artcpf', 'artregistro', 'artconselho'];
+      const rt_ok = markReq(rt_req, 'rt-');
+
+      if (!ro_ok || !ro_condOk || !upOk || !rt_ok) {
+        toast('Erro: Preencha todos os campos obrigatórios em ambas as seções.', 'err');
+        return;
+      }
+
+      const ro_vals = { _id: uid() };
+      [...ro_req, 'endereco', 'bairro', 'municipio', 'cep', 'linkpub'].forEach(f => {
+        const el = document.getElementById('ro-' + f); if (el) ro_vals[f] = el.value.trim();
+      });
+      DB.rolObras.push(ro_vals);
+      ['ro-planlic', 'ro-planven', 'ro-projcontratante', 'ro-projcontratada'].forEach(p => upCommit(p));
+
+      const rt_vals = { _id: uid() };
+      rt_req.forEach(f => { const el = document.getElementById('rt-' + f); if (el) rt_vals[f] = el.value.trim(); });
+      DB.respTecnico.push(rt_vals);
+
+      toast('Cadastro completo realizado com sucesso!', 'ok');
       pgNO();
     }
 
@@ -1487,7 +1532,7 @@
     }
 
     function frmAC() {
-      return `<div class="card"><div class="ch"><h3>AcompanhamentoContratos — Alteração Contratual</h3></div><div class="cb">
+      return `<div class="card"><div class="ch"><h3>Alteração Contratual</h3></div><div class="cb">
 
   <div class="section-title">Identificação</div>
   <div class="fg c3">
@@ -1735,7 +1780,7 @@
     }
 
     function frmEF() {
-      return `<div class="card"><div class="ch"><h3>ExoneraçãoFiscal — Encerrar Designação</h3></div><div class="cb">
+      return `<div class="card"><div class="ch"><h3>Encerrar Designação</h3></div><div class="cb">
 
   <div class="section-title">Identificação do Contrato</div>
   <div class="fg c3">
@@ -1870,7 +1915,7 @@
     }
 
     function frmSC() {
-      return `<div class="card"><div class="ch"><h3>SituaçãoContrato — Atualizar Status</h3></div><div class="cb">
+      return `<div class="card"><div class="ch"><h3> Atualizar Status</h3></div><div class="cb">
 
   <div class="section-title">Identificação</div>
   <div class="fg c3">
@@ -1955,7 +2000,7 @@
     }
 
     function frmAO() {
-      return `<div class="card"><div class="ch"><h3>AcompanhamentoObras — Medição</h3></div><div class="cb">
+      return `<div class="card"><div class="ch"><h3> Medição</h3></div><div class="cb">
 
   <div class="section-title">Identificação</div>
   <div class="fg c3">
