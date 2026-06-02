@@ -156,7 +156,7 @@ main {
 }
 .ch h3 { font-size: 13px; font-weight: 600; color: var(--bg); font-family: var(--font-head); }
 .ch .tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: #f3f4f6; color: var(--muted); font-family: var(--font-head); }
-.cb { padding: .2rem 1.75rem; }
+.cb { padding: .2rem 1.75rem 2rem 1.75rem; }
 
 .fg { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 .fg.c3 { grid-template-columns: 1fr 1fr 1fr; }
