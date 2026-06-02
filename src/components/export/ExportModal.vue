@@ -255,7 +255,10 @@ async function gerarRemessa() {
 .mh h3 { font-size: 15px; font-weight: 700; color: var(--text); }
 .mclose { background: none; border: none; cursor: pointer; font-size: 22px; color: var(--muted); }
 .mb { padding: 1.25rem; }
-.mf { padding: .85rem 1.25rem; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+.mf {
+  padding: .85rem 1.25rem; border-top: 1px solid var(--border);
+  display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;
+}
 .file-list-bg {
   background: #f8faff; border: 1px solid var(--border); border-radius: 9px;
   padding: 1rem; margin-bottom: 1rem;
@@ -282,5 +285,15 @@ async function gerarRemessa() {
   background: #1a1f2e; color: #7dd3fc; font-family: 'Courier New', monospace;
   font-size: 11px; padding: 1rem; border-radius: 6px; max-height: 280px;
   overflow: auto; line-height: 1.6; margin-top: 1rem;
+}
+
+@media (max-width: 480px) {
+  .mo { align-items: flex-start; padding: .5rem; padding-top: 1rem; }
+  .md { max-height: 94vh; border-radius: 8px; }
+  .mh h3 { font-size: 13px; }
+  .mb { padding: .75rem; }
+  .mf { flex-direction: column; align-items: stretch; }
+  .mf .btn { width: 100%; text-align: center; }
+  .file-list-grid { grid-template-columns: 1fr; }
 }
 </style>

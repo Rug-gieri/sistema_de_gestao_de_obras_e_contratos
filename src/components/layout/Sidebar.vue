@@ -53,14 +53,6 @@ function nav(id: string) {
 
 <template>
   <aside class="sidebar" :class="{ open: open }">
-    <div class="sidebar-logo-wrap">
-      <img
-        class="sidebar-logo"
-        src="https://www.portovelho.ro.gov.br/assets/site/img/logos/Prefeitura_Horizontal_Azul.svg"
-        alt="Prefeitura de Porto Velho"
-      />
-      <span class="sidebar-logo-sub">Porto Velho&ensp;·&ensp;RO</span>
-    </div>
     <nav>
       <template v-for="section in sections" :key="section.label">
         <div v-if="section.label" class="sl">{{ section.label }}</div>

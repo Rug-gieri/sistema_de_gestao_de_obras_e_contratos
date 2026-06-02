@@ -35,7 +35,7 @@ const topLinks = [
         <a href="https://www.portovelho.ro.gov.br" target="_blank" rel="noopener" class="logo-oficial">
           <img
             v-if="!logoError"
-            src="https://www.portovelho.ro.gov.br/assets/site/img/logos/Prefeitura_Horizontal_Azul.svg"
+            src="/Prefeitura_Horizontal_Azul.svg"
             alt="Prefeitura de Porto Velho"
             class="brand-logo"
             @error="logoError = true"
