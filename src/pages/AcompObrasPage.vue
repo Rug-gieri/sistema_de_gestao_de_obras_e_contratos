@@ -119,6 +119,14 @@ function saveAO() {
 
   db.acompObras.push(vals as any)
   db.persist()
+
+  if (aoRelfotRef.value?.fileObj) {
+    db.addFileToBank('RelatorioFot', { name: aoRelfotRef.value.fileName, file: aoRelfotRef.value.fileObj })
+  }
+  if (aoPlanobraRef.value?.fileObj) {
+    db.addFileToBank('PlanObra', { name: aoPlanobraRef.value.fileName, file: aoPlanobraRef.value.fileObj })
+  }
+
   toast.show('Acompanhamento de obra salvo!', 'ok')
   resetAll()
 }

@@ -333,6 +333,11 @@ function saveNC() {
   }
   db.fiscalGestor.push(fgVals as any)
   db.persist()
+
+  if (rcUploadRef.value?.fileObj) {
+    db.addFileToBank('Contratos', { name: rcUploadRef.value.fileName, file: rcUploadRef.value.fileObj })
+  }
+
   toast.show('Cadastro completo realizado com sucesso!', 'ok')
   resetAll()
 }

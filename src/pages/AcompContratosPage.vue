@@ -205,6 +205,11 @@ function saveAC() {
 
   db.acompContratos.push(vals as any)
   db.persist()
+
+  if (acUploadRef.value?.fileObj) {
+    db.addFileToBank('AcompContratos', { name: acUploadRef.value.fileName, file: acUploadRef.value.fileObj })
+  }
+
   toast.show('Acompanhamento salvo!', 'ok')
   resetAll()
 }

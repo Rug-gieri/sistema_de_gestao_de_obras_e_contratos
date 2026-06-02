@@ -52,7 +52,7 @@ function validate(): boolean {
   return status.value === 'ok'
 }
 
-defineExpose({ validate, reset, fileName, fileInput })
+defineExpose({ validate, reset, fileName, fileObj, fileInput })
 </script>
 
 <template>
