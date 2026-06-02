@@ -51,11 +51,15 @@ function getRef(field: string) {
   return map['ao-' + field]
 }
 
+function trimVal(v: any): string {
+  return String(v ?? '').trim()
+}
+
 function valid(fields: string[]): boolean {
   let ok = true
   for (const f of fields) {
     const ref = getRef(f)
-    if (!ref || !ref.value.trim()) {
+    if (!ref || !trimVal(ref.value)) {
       setInv(f, true)
       ok = false
     } else {
@@ -110,7 +114,7 @@ function saveAO() {
   const allFields = [...req, 'relfot', 'planobra']
   for (const f of allFields) {
     const ref = getRef(f)
-    vals[f] = ref ? ref.value.trim() : ''
+    vals[f] = ref ? trimVal(ref.value) : ''
   }
 
   db.acompObras.push(vals as any)

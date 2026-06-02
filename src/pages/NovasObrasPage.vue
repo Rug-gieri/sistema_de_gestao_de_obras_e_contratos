@@ -79,11 +79,15 @@ function isInv(prefix: string, field: string): boolean {
   return invalids.value[key].has(field)
 }
 
+function trimVal(v: any): string {
+  return String(v ?? '').trim()
+}
+
 function valid(prefix: string, fields: string[]): boolean {
   let ok = true
   for (const f of fields) {
     const r = getRef(prefix, f)
-    if (!r || !r.value.trim()) {
+    if (!r || !trimVal(r.value)) {
       setInv(prefix, f, true)
       ok = false
     } else {
@@ -150,7 +154,7 @@ function saveNO() {
   if (roQtdEnd.value === '1') {
     ;['endereco', 'bairro', 'municipio', 'cep'].forEach(f => {
       const r = getRef('ro', f)
-      if (!r || !r.value.trim()) {
+      if (!r || !trimVal(r.value)) {
         setInv('ro', f, true)
         roCondOk = false
       }
@@ -177,14 +181,14 @@ function saveNO() {
   const roAllFields = [...roReq, 'endereco', 'bairro', 'municipio', 'cep', 'linkpub']
   for (const f of roAllFields) {
     const r = getRef('ro', f)
-    roVals[f] = r ? r.value.trim() : ''
+    roVals[f] = r ? trimVal(r.value) : ''
   }
   db.rolObras.push(roVals as any)
 
   const rtVals: Record<string, string> = { _id: uid() }
   for (const f of rtReq) {
     const r = getRef('rt', f)
-    rtVals[f] = r ? r.value.trim() : ''
+    rtVals[f] = r ? trimVal(r.value) : ''
   }
   db.respTecnico.push(rtVals as any)
 

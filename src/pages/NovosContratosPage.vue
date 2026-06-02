@@ -112,11 +112,15 @@ function isInv(prefix: string, field: string): boolean {
   return invalids.value[key].has(field)
 }
 
+function trimVal(v: any): string {
+  return String(v ?? '').trim()
+}
+
 function valid(prefix: string, fields: string[]): boolean {
   let ok = true
   for (const f of fields) {
     const val = getRef(prefix, f)
-    if (!val || !val.value.trim()) {
+    if (!val || !trimVal(val.value)) {
       setInv(prefix, f, true)
       ok = false
     } else {
@@ -239,13 +243,13 @@ function saveNC() {
     'localpub', 'urlpublicacao', 'recdes', 'garantia', 'subcontrato']
   let rcOk = valid('rc', rcReq)
 
-  if (rcVigenciaIndeterminada.value === 'N' && !rcDataVigFim.value.trim()) {
+  if (rcVigenciaIndeterminada.value === 'N' && !trimVal(rcDataVigFim.value)) {
     setInv('rc', 'datavigfim', true)
     rcOk = false
   }
   if (rcGarantia.value === 'S') {
-    if (!rcValorGarantia.value.trim()) { setInv('rc', 'valorgarantia', true); rcOk = false }
-    if (!rcModalidadeGarantia.value.trim()) { setInv('rc', 'modalidadegarantia', true); rcOk = false }
+    if (!trimVal(rcValorGarantia.value)) { setInv('rc', 'valorgarantia', true); rcOk = false }
+    if (!trimVal(rcModalidadeGarantia.value)) { setInv('rc', 'modalidadegarantia', true); rcOk = false }
   }
 
   // Validar contratado conforme tipo de pessoa
@@ -263,43 +267,43 @@ function saveNC() {
 
   // --- FiscalGestor validation (explicit) ---
   let fgOk = true
-  if (!fgCnpj.value.trim()) { setInv('fg', 'cnpj', true); fgOk = false }
+  if (!trimVal(fgCnpj.value)) { setInv('fg', 'cnpj', true); fgOk = false }
   else { setInv('fg', 'cnpj', false) }
-  if (!fgTipoAgente.value.trim()) { setInv('fg', 'tipoagente', true); fgOk = false }
+  if (!trimVal(fgTipoAgente.value)) { setInv('fg', 'tipoagente', true); fgOk = false }
   else { setInv('fg', 'tipoagente', false) }
-  if (!fgIdentificadorAgente.value.trim()) { setInv('fg', 'identificadoragente', true); fgOk = false }
+  if (!trimVal(fgIdentificadorAgente.value)) { setInv('fg', 'identificadoragente', true); fgOk = false }
   else { setInv('fg', 'identificadoragente', false) }
-  if (!fgNomeAgente.value.trim()) { setInv('fg', 'nomeagente', true); fgOk = false }
+  if (!trimVal(fgNomeAgente.value)) { setInv('fg', 'nomeagente', true); fgOk = false }
   else { setInv('fg', 'nomeagente', false) }
-  if (!fgNaturezaCargo.value.trim()) { setInv('fg', 'naturezacargo', true); fgOk = false }
+  if (!trimVal(fgNaturezaCargo.value)) { setInv('fg', 'naturezacargo', true); fgOk = false }
   else { setInv('fg', 'naturezacargo', false) }
-  if (!fgDesignacao.value.trim()) { setInv('fg', 'designacao', true); fgOk = false }
+  if (!trimVal(fgDesignacao.value)) { setInv('fg', 'designacao', true); fgOk = false }
   else { setInv('fg', 'designacao', false) }
-  if (!fgNumeroDesignacao.value.trim()) { setInv('fg', 'numerodesignacao', true); fgOk = false }
+  if (!trimVal(fgNumeroDesignacao.value)) { setInv('fg', 'numerodesignacao', true); fgOk = false }
   else { setInv('fg', 'numerodesignacao', false) }
-  if (!fgAnoDesignacao.value.trim()) { setInv('fg', 'anodesignacao', true); fgOk = false }
+  if (!trimVal(fgAnoDesignacao.value)) { setInv('fg', 'anodesignacao', true); fgOk = false }
   else { setInv('fg', 'anodesignacao', false) }
-  if (!fgDataDesignacao.value.trim()) { setInv('fg', 'datadesignacao', true); fgOk = false }
+  if (!trimVal(fgDataDesignacao.value)) { setInv('fg', 'datadesignacao', true); fgOk = false }
   else { setInv('fg', 'datadesignacao', false) }
-  if (!fgLocalDesignacao.value.trim()) { setInv('fg', 'localdesignacao', true); fgOk = false }
+  if (!trimVal(fgLocalDesignacao.value)) { setInv('fg', 'localdesignacao', true); fgOk = false }
   else { setInv('fg', 'localdesignacao', false) }
-  if (!fgUrlDesignacao.value.trim()) { setInv('fg', 'urldesignacao', true); fgOk = false }
+  if (!trimVal(fgUrlDesignacao.value)) { setInv('fg', 'urldesignacao', true); fgOk = false }
   else { setInv('fg', 'urldesignacao', false) }
 
-  if (fgIdentificadorAgente.value === '1' && !fgCpfAgente.value.trim()) {
+  if (fgIdentificadorAgente.value === '1' && !trimVal(fgCpfAgente.value)) {
     setInv('fg', 'cpfagente', true); fgOk = false
   }
-  if (fgIdentificadorAgente.value === '2' && !fgCnpjAgente.value.trim()) {
+  if (fgIdentificadorAgente.value === '2' && !trimVal(fgCnpjAgente.value)) {
     setInv('fg', 'cnpjagente', true); fgOk = false
   }
 
-  if (fgTipoAgente.value === '1' && !fgClassificacaoFiscal.value.trim()) {
+  if (fgTipoAgente.value === '1' && !trimVal(fgClassificacaoFiscal.value)) {
     setInv('fg', 'classificacaofiscal', true); fgOk = false
   }
-  if (fgTipoAgente.value === '2' && !fgClassificacaoGestor.value.trim()) {
+  if (fgTipoAgente.value === '2' && !trimVal(fgClassificacaoGestor.value)) {
     setInv('fg', 'classificacaogestor', true); fgOk = false
   }
-  if (fgNaturezaCargo.value === '7' && !fgDescricaoNatureza.value.trim()) {
+  if (fgNaturezaCargo.value === '7' && !trimVal(fgDescricaoNatureza.value)) {
     setInv('fg', 'descricaonatureza', true); fgOk = false
   }
 
@@ -313,7 +317,7 @@ function saveNC() {
   const rcAllFields = [...rcReq, 'datavigfim', 'valorgarantia', 'modalidadegarantia']
   for (const f of rcAllFields) {
     const ref = getRef('rc', f)
-    rcVals[f] = ref ? ref.value.trim() : ''
+    rcVals[f] = ref ? trimVal(ref.value) : ''
   }
   db.rolContratos.push(rcVals as any)
 
@@ -325,7 +329,7 @@ function saveNC() {
     'localdesignacao', 'urldesignacao', 'cpfagente', 'cnpjagente']
   for (const f of fgFieldNames) {
     const ref = getRef('fg', f)
-    fgVals[f] = ref ? ref.value.trim() : ''
+    fgVals[f] = ref ? trimVal(ref.value) : ''
   }
   db.fiscalGestor.push(fgVals as any)
   db.persist()

@@ -50,11 +50,15 @@ function getRef(field: string) {
   return map['ef-' + field]
 }
 
+function trimVal(v: any): string {
+  return String(v ?? '').trim()
+}
+
 function valid(fields: string[]): boolean {
   let ok = true
   for (const f of fields) {
     const ref = getRef(f)
-    if (!ref || !ref.value.trim()) {
+    if (!ref || !trimVal(ref.value)) {
       setInv(f, true)
       ok = false
     } else {
@@ -101,14 +105,14 @@ function saveEF() {
     'localexoneracao', 'urlexoneracao']
   let ok = valid(req)
 
-  if (efIdentificadorAgente.value === '1' && !efCpfAgente.value.trim()) {
+  if (efIdentificadorAgente.value === '1' && !trimVal(efCpfAgente.value)) {
     setInv('cpfagente', true); ok = false
   }
-  if (efIdentificadorAgente.value === '2' && !efCnpjAgente.value.trim()) {
+  if (efIdentificadorAgente.value === '2' && !trimVal(efCnpjAgente.value)) {
     setInv('cnpjagente', true); ok = false
   }
 
-  if (efExoneracao.value === '6' && !efDescricaoExoneracao.value.trim()) {
+  if (efExoneracao.value === '6' && !trimVal(efDescricaoExoneracao.value)) {
     setInv('descricaoexoneracao', true); ok = false
   }
 
@@ -121,7 +125,7 @@ function saveEF() {
   const allFields = [...req, 'cpfagente', 'cnpjagente', 'descricaoexoneracao']
   for (const f of allFields) {
     const ref = getRef(f)
-    vals[f] = ref ? ref.value.trim() : ''
+    vals[f] = ref ? trimVal(ref.value) : ''
   }
 
   db.exoneracaoFiscal.push(vals as any)

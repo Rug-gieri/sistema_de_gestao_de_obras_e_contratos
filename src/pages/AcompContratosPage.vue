@@ -90,11 +90,15 @@ function getRef(field: string) {
   return map['ac-' + field]
 }
 
+function trimVal(v: any): string {
+  return String(v ?? '').trim()
+}
+
 function valid(fields: string[]): boolean {
   let ok = true
   for (const f of fields) {
     const ref = getRef(f)
-    if (!ref || !ref.value.trim()) {
+    if (!ref || !trimVal(ref.value)) {
       setInv(f, true)
       ok = false
     } else {
@@ -144,40 +148,40 @@ function saveAC() {
     'localpubalteracao', 'urlalteracao', 'tipoalteracao', 'objeto']
   let ok = valid(req)
 
-  if (showAditivo.value && !acClassificacaoAditivo.value.trim()) {
+  if (showAditivo.value && !trimVal(acClassificacaoAditivo.value)) {
     setInv('classificacaoaditivo', true); ok = false
   }
-  if (showClassificacaoUnilateral.value && !acClassificacaoUnilateral.value.trim()) {
+  if (showClassificacaoUnilateral.value && !trimVal(acClassificacaoUnilateral.value)) {
     setInv('classificacaounilateral', true); ok = false
   }
-  if (showModProjeto.value && !acModProjeto.value.trim()) {
+  if (showModProjeto.value && !trimVal(acModProjeto.value)) {
     setInv('modprojeto', true); ok = false
   }
-  if (showModValor.value && !acModValor.value.trim()) {
+  if (showModValor.value && !trimVal(acModValor.value)) {
     setInv('modvalor', true); ok = false
   }
-  if (showValAcrescimo.value && !acValAcrescimo.value.trim()) {
+  if (showValAcrescimo.value && !trimVal(acValAcrescimo.value)) {
     setInv('valacrescimo', true); ok = false
   }
-  if (showValSupressao.value && !acValSupressao.value.trim()) {
+  if (showValSupressao.value && !trimVal(acValSupressao.value)) {
     setInv('valsupressao', true); ok = false
   }
-  if (showClassificacaoBilateral.value && !acClassificacaoBilateral.value.trim()) {
+  if (showClassificacaoBilateral.value && !trimVal(acClassificacaoBilateral.value)) {
     setInv('classificacaobilateral', true); ok = false
   }
-  if (showDescricaoBilateral.value && !acDescricaoBilateral.value.trim()) {
+  if (showDescricaoBilateral.value && !trimVal(acDescricaoBilateral.value)) {
     setInv('descricaobilateral', true); ok = false
   }
-  if ((showDataVigBilateral.value || showDataVigUnilateral.value) && !acDataVig.value.trim()) {
+  if ((showDataVigBilateral.value || showDataVigUnilateral.value) && !trimVal(acDataVig.value)) {
     setInv('datavig', true); ok = false
   }
-  if (showApostilamento.value && !acTipoApostilamento.value.trim()) {
+  if (showApostilamento.value && !trimVal(acTipoApostilamento.value)) {
     setInv('tipoapostilamento', true); ok = false
   }
-  if (showValApostilamento.value && !acValApostilamento.value.trim()) {
+  if (showValApostilamento.value && !trimVal(acValApostilamento.value)) {
     setInv('valapostilamento', true); ok = false
   }
-  if (showDescricaoApostilamento.value && !acDescricaoAdApostilamento.value.trim()) {
+  if (showDescricaoApostilamento.value && !trimVal(acDescricaoAdApostilamento.value)) {
     setInv('descricaoadapostilamento', true); ok = false
   }
 
@@ -196,7 +200,7 @@ function saveAC() {
     'valapostilamento', 'descricaoadapostilamento']
   for (const f of allFields) {
     const ref = getRef(f)
-    vals[f] = ref ? ref.value.trim() : ''
+    vals[f] = ref ? trimVal(ref.value) : ''
   }
 
   db.acompContratos.push(vals as any)
