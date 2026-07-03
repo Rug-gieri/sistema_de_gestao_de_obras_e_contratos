@@ -1,5 +1,15 @@
 <script setup lang="ts">
-defineEmits<{ navigate: [page: string] }>()
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const routes: Record<string, string> = {
+  nc: '/contratos',
+  no: '/obras',
+  ac: '/acomp-contratos',
+  ao: '/acomp-obras',
+  dash: '/dashboard',
+}
 
 const cards = [
   { id: 'nc', icon: '📄', label: 'Novos Contratos', desc: 'Cadastro de novos instrumentos contratuais' },
@@ -8,6 +18,10 @@ const cards = [
   { id: 'ao', icon: '⚙', label: 'Acomp. Obras', desc: 'Medição e evolução de obras' },
   { id: 'dash', icon: '📊', label: 'Visão Geral', desc: 'Painel consolidado com indicadores' },
 ]
+
+function goTo(cardId: string) {
+  router.push(routes[cardId] || '/')
+}
 </script>
 
 <template>
@@ -18,7 +32,7 @@ const cards = [
       v-for="card in cards"
       :key="card.id"
       class="home-card"
-      @click="$emit('navigate', card.id)"
+      @click="goTo(card.id)"
     >
       <div class="home-icon">{{ card.icon }}</div>
       <div class="home-label">{{ card.label }}</div>
