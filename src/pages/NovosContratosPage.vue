@@ -90,6 +90,59 @@ const contratadoLabel = computed(() =>
 
 const rcUploadRef = ref<InstanceType<typeof UploadBox> | null>(null)
 
+const isDev = import.meta.env.DEV
+
+function fillMockData() {
+  rcVigenciaIndeterminada.value = 'N'
+  rcGarantia.value = 'S'
+  rcTpPessoa.value = 'J'
+  fgTipoAgente.value = '1'
+  fgIdentificadorAgente.value = '1'
+
+  rcCnpj.value = '12.345.678/0001-90'
+  rcIdContratoPNCP.value = '1234567890123456789012345678'
+  rcIdContratacaoPNCP.value = '9876543210987654321098765432'
+  rcTipo.value = '1'
+  rcNumInstrumentoContratual.value = '001/2025'
+  rcAnoInstrumentoContratual.value = '2025'
+  rcProcesso.value = '00000.000000/2025-00'
+  rcAnoProc.value = '2025'
+  rcCategoria.value = '7'
+  rcContratado.value = '12.345.678/0001-90'
+  rcObjeto.value = 'Contrato de obras públicas para construção de escola municipal no bairro Centro'
+  rcValIni.value = '150000.00'
+  rcRecDes.value = 'D'
+  rcSubContrato.value = 'N'
+  rcDataVigInicio.value = '2025-01-01'
+  rcDataAssinatura.value = '2025-01-01'
+  rcDataPub.value = '2025-01-02'
+  rcLocalPub.value = '1'
+  rcUrlPublicacao.value = 'https://doe.portovelho.ro.gov.br/2025/01/02'
+
+  rcDataVigFim.value = '2025-12-31'
+  rcValorGarantia.value = '7500.00'
+  rcModalidadeGarantia.value = '3'
+
+  fgCnpj.value = '12.345.678/0001-90'
+  fgNomeAgente.value = 'Maria da Silva Santos'
+  fgCpfAgente.value = '123.456.789-00'
+  fgNaturezaCargo.value = '1'
+  fgDesignacao.value = '2'
+  fgNumeroDesignacao.value = '001'
+  fgAnoDesignacao.value = '2025'
+  fgDataDesignacao.value = '2025-01-01'
+  fgLocalDesignacao.value = '1'
+  fgUrlDesignacao.value = 'https://doe.portovelho.ro.gov.br/2025/01/01'
+
+  fgClassificacaoFiscal.value = '1'
+
+  if (rcUploadRef.value) {
+    const mockFile = new File(['conteudo-teste'], 'arquivo-teste.pdf', { type: 'application/pdf' })
+    rcUploadRef.value.fileObj = mockFile
+    rcUploadRef.value.fileName = 'arquivo-teste'
+  }
+}
+
 // --- Validation helpers ---
 interface InvalidMap {
   rc: Set<string>
@@ -363,6 +416,8 @@ const tipoLabel: Record<string, string> = {
 <template>
   <div class="pt">Cadastre um novo contrato</div>
   <div class="ps">Preencha as seções abaixo para registrar o contrato e designar o fiscal/gestor</div>
+
+  <button v-if="isDev" class="btn btn-s" style="margin-bottom: 1rem;" @click="fillMockData">🧪 Preencher dados de teste</button>
 
   <div id="combined-form">
     <!-- Card: Sessão 1 - Dados do Contrato -->
