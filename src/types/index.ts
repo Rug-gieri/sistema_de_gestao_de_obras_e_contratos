@@ -181,3 +181,9 @@ export interface FileEntry {
   name: string
   file: File
 }
+
+export interface PersistedFileEntry {
+  name: string
+  base64: string
+  type: string
+}

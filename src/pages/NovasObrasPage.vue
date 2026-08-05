@@ -141,7 +141,7 @@ function resetAll() {
   roProjContratanteRef.value?.reset(); roProjContratadaRef.value?.reset()
 }
 
-function saveNO() {
+async function saveNO() {
   invalids.value = { ro: new Set(), rt: new Set() }
 
   const roReq = ['cnpj', 'idcontratopncp', 'idcontratacaopncp', 'tipoinstrumentocontratacao',
@@ -195,16 +195,16 @@ function saveNO() {
   db.persist()
 
   if (roPlanLicRef.value?.fileObj) {
-    db.addFileToBank('PlanLicitacao', { name: roPlanLicRef.value.fileName, file: roPlanLicRef.value.fileObj })
+    await db.addFileToBank('PlanLicitacao', { name: roPlanLicRef.value.fileName, file: roPlanLicRef.value.fileObj })
   }
   if (roPlanVenRef.value?.fileObj) {
-    db.addFileToBank('PlanVencedora', { name: roPlanVenRef.value.fileName, file: roPlanVenRef.value.fileObj })
+    await db.addFileToBank('PlanVencedora', { name: roPlanVenRef.value.fileName, file: roPlanVenRef.value.fileObj })
   }
   if (roProjContratanteRef.value?.fileObj) {
-    db.addFileToBank('ProjContratante', { name: roProjContratanteRef.value.fileName, file: roProjContratanteRef.value.fileObj })
+    await db.addFileToBank('ProjContratante', { name: roProjContratanteRef.value.fileName, file: roProjContratanteRef.value.fileObj })
   }
   if (roProjContratadaRef.value?.fileObj) {
-    db.addFileToBank('ProjContratada', { name: roProjContratadaRef.value.fileName, file: roProjContratadaRef.value.fileObj })
+    await db.addFileToBank('ProjContratada', { name: roProjContratadaRef.value.fileName, file: roProjContratadaRef.value.fileObj })
   }
 
   toast.show('Cadastro completo realizado com sucesso!', 'ok')

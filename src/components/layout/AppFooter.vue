@@ -3,7 +3,7 @@
 
 <template>
   <footer class="main-footer">
-    Desenvolvido pela <a href="https://semec.portovelho.ro.gov.br/" target="_blank" rel="noopener">SEMEC</a> - Versão de testes
+    Desenvolvido pela <a href="https://semec.portovelho.ro.gov.br/" target="_blank" rel="noopener">SEMEC</a> - Versão de testes 0.1.0
   </footer>
 </template>
 

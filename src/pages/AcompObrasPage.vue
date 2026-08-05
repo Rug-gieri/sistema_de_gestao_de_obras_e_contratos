@@ -92,7 +92,7 @@ function resetAll() {
   aoPlanobraRef.value?.reset()
 }
 
-function saveAO() {
+async function saveAO() {
   invalids.value = new Set()
 
   const req = ['cnpj', 'idcontratopncp', 'numinstrumentocontratual',
@@ -121,10 +121,10 @@ function saveAO() {
   db.persist()
 
   if (aoRelfotRef.value?.fileObj) {
-    db.addFileToBank('RelatorioFot', { name: aoRelfotRef.value.fileName, file: aoRelfotRef.value.fileObj })
+    await db.addFileToBank('RelatorioFot', { name: aoRelfotRef.value.fileName, file: aoRelfotRef.value.fileObj })
   }
   if (aoPlanobraRef.value?.fileObj) {
-    db.addFileToBank('PlanObra', { name: aoPlanobraRef.value.fileName, file: aoPlanobraRef.value.fileObj })
+    await db.addFileToBank('PlanObra', { name: aoPlanobraRef.value.fileName, file: aoPlanobraRef.value.fileObj })
   }
 
   toast.show('Acompanhamento de obra salvo!', 'ok')

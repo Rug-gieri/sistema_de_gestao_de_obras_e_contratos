@@ -233,7 +233,7 @@ function resetAll() {
   rcUploadRef.value?.reset()
 }
 
-function saveNC() {
+async function saveNC() {
   invalids.value = { rc: new Set(), fg: new Set() }
 
   // --- RolContratos validation ---
@@ -335,7 +335,7 @@ function saveNC() {
   db.persist()
 
   if (rcUploadRef.value?.fileObj) {
-    db.addFileToBank('Contratos', { name: rcUploadRef.value.fileName, file: rcUploadRef.value.fileObj })
+    await db.addFileToBank('Contratos', { name: rcUploadRef.value.fileName, file: rcUploadRef.value.fileObj })
   }
 
   toast.show('Cadastro completo realizado com sucesso!', 'ok')

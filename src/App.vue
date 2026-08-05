@@ -7,6 +7,7 @@ import Sidebar from './components/layout/Sidebar.vue'
 import SidebarOverlay from './components/layout/SidebarOverlay.vue'
 import { useToast } from './stores/useToast'
 import ExportModal from './components/export/ExportModal.vue'
+import AppFooter from './components/layout/AppFooter.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -66,9 +67,7 @@ function toggleSidebar() {
     <SidebarOverlay :visible="sidebarOpen" @close="sidebarOpen = false" />
   </div>
 
-  <footer class="main-footer">
-    Desenvolvido pela <a href="https://semec.portovelho.ro.gov.br/" target="_blank">SEMEC</a> - Versão de testes
-  </footer>
+  <AppFooter />
 
   <!-- inline toast -->
   <Transition name="tst">

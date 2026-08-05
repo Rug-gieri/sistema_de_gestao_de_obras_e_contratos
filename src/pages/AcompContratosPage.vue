@@ -140,7 +140,7 @@ function resetAll() {
   acUploadRef.value?.reset()
 }
 
-function saveAC() {
+async function saveAC() {
   invalids.value = new Set()
 
   const req = ['cnpj', 'idcontratopncp', 'numeroalteracao', 'anoalteracao',
@@ -207,7 +207,7 @@ function saveAC() {
   db.persist()
 
   if (acUploadRef.value?.fileObj) {
-    db.addFileToBank('AcompContratos', { name: acUploadRef.value.fileName, file: acUploadRef.value.fileObj })
+    await db.addFileToBank('AcompContratos', { name: acUploadRef.value.fileName, file: acUploadRef.value.fileObj })
   }
 
   toast.show('Acompanhamento salvo!', 'ok')
